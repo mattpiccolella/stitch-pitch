@@ -1,4 +1,4 @@
 from mongoengine import connect
 from config import config
 
-connect(settings.APPLICATION_MONGODB_DBNAME, host=settings.APPLICATION_MONGODB_URI)
+connect(config.APP_MONGODB_DBNAME, host=config.APP_MONGODB_URI)
