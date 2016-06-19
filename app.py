@@ -86,7 +86,7 @@ def record():
     return render_template("record.html", word=random_word())
 
 
-def detect_silence(sound, threshold=-40, chunk=5)
+def detect_silence(sound, threshold=-40, chunk=5):
     trim = 0
     while sound[trim: trim + chunk].dBFS < threshold:
         trim += chunk
