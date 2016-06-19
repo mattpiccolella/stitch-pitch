@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division, print_function
 
 import os, random
 import time
@@ -12,27 +12,29 @@ from config import config
 
 app = Flask(__name__)
 
-# FILLER_VIDEO = meditor.VideoFileClip("filler.mp4", audio=False)
+FILLER_VIDEO = VideoFileClip("filler.mp4", audio=False)
 
 def make_video(clips, song):
     end = 0
     for clip, lyric in zip(clips, song.lyrics):
+        print("ZZZ", end, lyric.start_time)
         if end < lyric.start_time:  # GAP
+            print("QQQ", "GAP", lyric.start_time - end)
             yield FILLER_VIDEO.speedx(final_duration=lyric.start_time - end)
-        else:
-            yield clip.speedx(final_duration=lyric.duration)
+        print("QQQ", "NOP", lyric.duration)
+    	yield clip.speedx(final_duration=lyric.duration)
         end = lyric.start_time + lyric.duration
 
 @app.route('/play', methods=["POST"])
 def play():
-    clips = [meditor.VideoFileClip(clip) for clip in request.json["clips"]]
-    song = Song.object(song_name=request.json["song"])
+    clips = [VideoFileClip(clip) for clip in request.json["clips"]]
+    song = Song.objects(title=request.json["song"]).get()
 
     video = concatenate_videoclips(list(make_video(clips, song)))
 
-    fname = "output-{0}.webm".format(int(time.time()))
+    fname = "output/output-{0}.webm".format(int(time.time()))
     video.write_videofile(fname)
-    send_file(fname, mimetype="video/webm")
+    return send_file(fname, mimetype="video/webm")
 
 @app.route('/auto_search', methods=['GET'])
 def auto_search():
@@ -65,10 +67,15 @@ def random_word():
     word = words[random.randint(0,len(words)-1)]
     return word
 
+
+words = ["imagine", "there's", "no", "heaven", "it's", "easy"]
+i = -1
+
 @app.route("/record")
 def record():
-    with open('files/song_words.txt') as song_words:
-      return render_template("record.html", word = random_word())
+    global i
+    i += 1
+    return render_template("record.html", word=words[i])
 
 @app.route("/upload", methods=["POST"])
 def upload():
