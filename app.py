@@ -18,6 +18,7 @@ from bson import json_util
 app = Flask(__name__)
 
 giphy = giphypop.Giphy()
+FILLER_VIDEO = VideoFileClip("filler.mp4")
 
 def get_fillers(song):
     for gif in giphy.search(song):
@@ -35,10 +36,10 @@ def make_video(clips, song):
         #if song == "Eye of the Tiger":
         #    lyric.start_time -= 2
         if end < lyric.start_time:  # GAP
-            yield next(fillers).speedx(0, lyric.start_time - end)
+            yield FILLER_VIDEO.speedx(0, lyric.start_time - end)
         if clip.duration < lyric.duration:
             yield clip
-            yield next(fillers).speedx(final_duration=lyric.duration - clip.duration)
+            yield FILLER_VIDEO.speedx(final_duration=lyric.duration - clip.duration)
         else:
             yield clip.speedx(final_duration=lyric.duration)
         end = lyric.start_time + lyric.duration
