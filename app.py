@@ -2,6 +2,7 @@ from __future__ import division, print_function
 
 import os, random
 import subprocess
+import gc
 import time
 from model.models import Song, VideoClip
 
@@ -19,18 +20,41 @@ FILLER_VIDEO = VideoFileClip("filler.mp4", audio=False)
 
 def make_video(clips, song):
     end = 0
+
     for clip, lyric in zip(clips, song.lyrics):
+        clip = VideoFileClip(clip)
+        #if song == "Eye of the Tiger":
+        #    lyric.start_time -= 2
         if end < lyric.start_time:  # GAP
             yield FILLER_VIDEO.speedx(final_duration=lyric.start_time - end)
-    	yield clip.speedx(final_duration=lyric.duration)
+        if clip.duration < lyric.duration:
+            yield clip
+            yield FILLER_VIDEO.speedx(final_duration=lyric.duration - clip.duration)
+        else:
+    	      yield clip.speedx(final_duration=lyric.duration)
         end = lyric.start_time + lyric.duration
+
+def batch_concatenate(songs, batch_size=30):
+    batch = []
+    video = None
+    timestamp = int(time.time())
+
+    while True:
+        try:
+            if len(batch) > batch_size:
+                video = concatenate_videoclips(batch)
+                video.write_videofile("/tmp/video-{0}.mp4".format(timestamp))
+                del video    # garbage collect the file descriptors!
+                batch = [VideoFileClip("/tmp/video-{0}.mp4".format(timestamp))]
+            batch.append(next(songs))
+        except StopIteration:
+            return concatenate_videoclips(batch)
 
 @app.route('/play', methods=["POST"])
 def play():
-    clips = [VideoFileClip(clip) for clip in request.json["clips"]]
     song = Song.objects(title=request.json["song"]).get()
 
-    video = concatenate_videoclips(list(make_video(clips, song)))
+    video = batch_concatenate(make_video(request.json["clips"], song))
     instrumental = AudioFileClip("files/instrumental/{0}.wav".format(request.json["song"]))
     audio = CompositeAudioClip([video.audio, instrumental.subclip(0, video.duration)])
 
