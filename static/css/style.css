@@ -1,0 +1,19 @@
+.banner {
+	margin: 1rem;
+}
+
+#lyrics {
+	border: 1px solid;
+	height: 20rem;
+}
+
+.clip {
+	display: inline-block;
+	border: 1px solid;
+	width: 100%;
+	height: 11rem;
+}
+
+.columns {
+	margin-bottom: 2rem;
+}
