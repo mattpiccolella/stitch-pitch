@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %} Stitch Pitch -- Record {% endblock %}
+
+{% block scripts %}
+<script src="//cdn.WebRTC-Experiment.com/RecordRTC.js"></script>
+<script src="/static/js/app.js"></script>
+{% endblock %}
+
+{% block body %}
+<div id="players">
+  <video class="recorder" autoplay loop muted> </video>
+  <audio class="recorder" autoplay loop muted></audio>
+</div>
+
+<button id="record_button">Start Recording</button>
+<button id="play_button">Play</button>
+<button id="upload_button">Upload</button>
+{% endblock %}

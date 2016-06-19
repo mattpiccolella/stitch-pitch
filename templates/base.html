@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}{% endblock %}</title>
+    <script src="https://cdn.WebRTC-Experiment.com/RecordRTC.js"></script>
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.min.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-  <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
-  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
-  <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
-</head>
-<body>
-  {% block body %}{% endblock %}
-  <script src="{{ url_for('static', filename='js/base.js') }}"></script>
-</body>
+    <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
+    {% block scripts %} {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    {% endblock %}
+
+    <script>
+      $(document).foundation();
+    </script>
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+  </body>
 </html>

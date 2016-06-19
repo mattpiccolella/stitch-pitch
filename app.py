@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from config import config
+import time
 from model.models import Song
 
 app = Flask(__name__)
@@ -28,6 +29,17 @@ def home():
       return render_template('home.html', should_show_results = should_show_results,
         song_name = song_name, artist_name = artist_name, lyrics = lyrics)
   return render_template('home.html', should_show_results = should_show_results)
+
+@app.route("/record")
+def record():
+    return render_template("record.html")
+
+@app.route("/upload", methods=["POST"])
+def upload():
+	currTime = time.time()
+
+	request.files["video"].save("uploads/video-"+str(currTime)+".webm")
+	return "SUCCESS"
 
 if __name__ == '__main__':
     app.run()
