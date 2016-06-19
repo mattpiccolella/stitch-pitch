@@ -6,19 +6,28 @@ app = Flask(__name__)
 
 @app.route('/auto_search', methods=['GET'])
 def auto_search():
-  search = request.args.get('term')
-  results 
-  return jsonify(list = RESULTS)
+  search_term = request.args.get('term')
+  results = Song.objects(title__icontains=search_term).distinct('title')
+  return jsonify(list = results)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
   should_show_results = (request.method == 'POST')
-  # TODO: Make these real.
-  song_name = 'Hey Jude'
-  artist_name = 'The Beatles'
-  lyrics = "Hey Jude, don't make it bad, take a sad song, and make it better"
-  return render_template('home.html', should_show_results = should_show_results,
-    song_name = song_name, artist_name = artist_name, lyrics = lyrics)
+  if should_show_results:
+    search_term = request.form['user_search']
+    query = Song.objects(title = search_term)
+    if query.count() == 0:
+      return render_template('home.html', should_show_results = False,
+        no_results_text = 'No results found')
+    else:
+      song = query.first()
+      song_name = song.title
+      artist_name = song.artist_name
+      lyrics_list = map(lambda lyric : str(lyric.word), song.lyrics)
+      lyrics = ' '.join(lyrics_list)
+      return render_template('home.html', should_show_results = should_show_results,
+        song_name = song_name, artist_name = artist_name, lyrics = lyrics)
+  return render_template('home.html', should_show_results = should_show_results)
 
 if __name__ == '__main__':
     app.run()

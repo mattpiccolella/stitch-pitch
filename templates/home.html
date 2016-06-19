@@ -15,33 +15,71 @@
         	<div class="small-2 columns">
         	    <button class="postfix search-button" type="submit">Search</button>
         	</div>
-    	</form>
+    </form>
 
-    {% if should_show_results %}
-  		<div class="columns">
-        <h2>{{ song_name }} by {{ artist_name }}</h2>
-  			<div id="lyrics">
-          <p>{{ lyrics }}</p>
-        </div>
-  		</div>
+    <div class="columns">
+      {{ no_results_text}}
+      {% if should_show_results %}
+          <h2>{{ song_name }} by {{ artist_name }}</h2>
+    			<div id="lyrics_box">
+            <div class="lyrics_inner">
+              <h2 id="lyrics_text"></h2>
+            </div>
+          </div>
+    		</div>
 
-  		<div id="clip-choices">
-  			<div class="large-3 columns">
-  				<div id="clip-choice-1" class="clip">  </div>
-  			</div>
+    		<div id="clip-choices">
     			<div class="large-3 columns">
-    				<div id="clip-choice-2" class="clip">  </div>
+    				<div id="clip-choice-1" class="clip">  </div>
     			</div>
-  			<div class="large-3 columns">
-    				<div id="clip-choice-3" class="clip">  </div>
-    			</div>
+      			<div class="large-3 columns">
+      				<div id="clip-choice-2" class="clip">  </div>
+      			</div>
     			<div class="large-3 columns">
-    				<div id="clip-choice-4" class="clip">  </div>
-    			</div>			
-  		</div>
-    {% endif %}
+      				<div id="clip-choice-3" class="clip">  </div>
+      			</div>
+      			<div class="large-3 columns">
+      				<div id="clip-choice-4" class="clip">  </div>
+      			</div>			
+    		</div>
+      {% endif %}
+    </div>
 
 	</div>
+
+  <script>
+    var lyrics = "{{ lyrics }}".split(' ');
+    var currentStart = 0;
+    var NUM_WORDS = 6;
+
+    // TODO: Handle the edge cases for videos.
+
+    function getCurrentLyrics() {
+      return lyrics.slice(currentStart, currentStart + NUM_WORDS);
+    }
+
+    function getFormattedLyrics() {
+      var lyrics = currentLyrics.slice();
+      lyrics[currentStart % NUM_WORDS] = "<strong>" + currentLyrics[currentStart % NUM_WORDS] + "</strong>";
+      return lyrics.join(' ');
+    }
+
+    function setFormattedLyrics() {
+      $('#lyrics_text').html(getFormattedLyrics());
+    }
+
+    var currentLyrics = getCurrentLyrics();
+    setFormattedLyrics();
+
+    $('.clip').click(function(event) {
+      currentStart++;
+      if (currentStart % NUM_WORDS == 0) {
+        currentLyrics = getCurrentLyrics();
+      }
+      setFormattedLyrics();
+    });
+
+  </script>
 </div>
 <script src="{{ url_for('static', filename='js/base.js') }}"></script>
 {% endblock %}

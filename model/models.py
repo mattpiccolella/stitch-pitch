@@ -8,6 +8,7 @@ class Lyric(Document):
 class Song(Document):
   title = StringField(required=True)
   file_name = StringField(required=True)
+  artist_name = StringField(required=True)
   lyrics = EmbeddedDocumentListField('Lyric')
 
 class VideoClip(Document):
