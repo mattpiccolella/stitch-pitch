@@ -5,7 +5,8 @@ import time
 from model.models import Song, VideoClip
 
 from flask import Flask, render_template, request, jsonify, send_file
-from moviepy.editor import VideoFileClip, concatenate_videoclips
+from moviepy.editor import (VideoFileClip, concatenate_videoclips, AudioFileClip,
+                            CompositeAudioClip)
 
 from config import config
 
@@ -31,9 +32,11 @@ def play():
     song = Song.objects(title=request.json["song"]).get()
 
     video = concatenate_videoclips(list(make_video(clips, song)))
+    instrumental = AudioFileClip("files/instrumental/{0}.wav".format(request.json["song"]))
+    audio = CompositeAudioClip([video.audio, instrumental.subclip(0, video.duration)])
 
     fname = "output/output-{0}.webm".format(int(time.time()))
-    video.write_videofile(fname)
+    video.set_audio(audio).write_videofile(fname)
     return send_file(fname, mimetype="video/webm")
 
 @app.route('/auto_search', methods=['GET'])
