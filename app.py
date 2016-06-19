@@ -73,7 +73,7 @@ i = -1
 
 def random_word():
   with open('files/eye_tiger.txt') as song_words:
-    words = [line.rstrip('\n') for line in song_words]
+    words = [line.rstrip('\n').lower() for line in song_words]
     word = words[i]
     return word
 
