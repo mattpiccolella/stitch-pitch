@@ -22,7 +22,7 @@ class Kar(object):
     @property
     def lyrics(self):
         syllables = list(self.midi.karsyl)
-        times = list(midi.kartimes)
+        times = list(self.midi.kartimes)
         lyrics = [Syllable(syllable, start, end - start)
                   for syllable, start, end, in zip(syllables, times, times[1:])]
         # Get last syllable

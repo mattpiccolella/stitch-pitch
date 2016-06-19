@@ -1,18 +1,28 @@
+#!/usr/bin/env python2
+from __future__ import print_function
+import os
+
 from model.models import Lyric, Song, VideoClip
+from lib.kar import Kar
 
-def test_create_song():
-    lyric1 = Lyric(word="Hey", start_time=0, duration=1)
-    lyric2 = Lyric(word="Jude", start_time=1, duration=1)
-    song = Song(title = "Hey Jude")
-    song.lyrics.append(lyric1)
-    song.lyrics.append(lyric2)
-    song.save()
-
-def fill_database():
-    print "Filling in database..."
-    # TODO: Alan will fill this in.
+def add_kar(song_name, fname):
+    k = Kar(fname)
+    song = Song(title=song_name)
+    song.lyrics = [Lyric(word=syllable.text,
+                         start_time=syllable.start,
+                         duration=syllable.duration)
+                   for syllable in k.lyrics]
+    song.save(force_insert=True)
 
 if __name__ == '__main__':
-    test_create_song()
-    # TODO: Uncomment this.
-    # fill_database()
+    for fname in os.listdir("files/kar/"):
+        song_name, __ = os.path.splitext(fname)
+        fname = os.path.join("files/kar/", fname)
+        try:
+            add_kar(song_name, fname)
+            print(song_name)
+        except Exception as e:
+            print()
+            print(song_name, "failed")
+            print(e)
+            print()

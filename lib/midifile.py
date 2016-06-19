@@ -547,14 +547,14 @@ print m.karlinea[0]+'__'+m.karlineb[0]
 
                 else: # MIDI messages
                     if status < 128: # Use running status instead
-                        status=runningstatus
+                        status = runningstatus
                         self.fileobject.seek(-1,1)
                         if writetrack:
                             fout.seek(-1,1)
                         iread=iread-1
                     status1 = status / 16
                     status2 = status % 16
-                    channel=status2
+                    channel = status2
 
                     writeevent=True
                     if currentpatch in patches2remove:
@@ -564,15 +564,15 @@ print m.karlinea[0]+'__'+m.karlineb[0]
                         read=self.fileobject.read(1)
                         if writetrack:
                             fout.write(read)
-                        read=struct.unpack('>B',read)[0]
+                        read = struct.unpack('>B',read)[0]
                         currentpatch=read
-                        iread=iread+1
+                        iread += 1
                     elif status1 == 0b1101: # After-touch
-                        read=self.fileobject.read(1)
+                        read = self.fileobject.read(1)
                         if writetrack:
                             fout.write(read)
-                        read=struct.unpack('>B',read)[0]
-                        iread=iread+1
+                        read = struct.unpack('>B',read)[0]
+                        iread += 1
                     else:
                         read1=self.fileobject.read(1)
                         read2=self.fileobject.read(1)
