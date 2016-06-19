@@ -72,8 +72,6 @@ def home():
 i = -1
 
 def random_word():
-  global i
-  i = i + 1
   with open('files/eye_tiger.txt') as song_words:
     words = [line.rstrip('\n') for line in song_words]
     word = words[i]
