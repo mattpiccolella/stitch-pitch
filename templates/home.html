@@ -9,7 +9,7 @@
 		</div>
 
     <video id="stitch_video" width="320" height="240" controls hidden>
-      <source src="/uploads/glory-1466357583.mp4" type="video/mp4">
+      <source src="/uploads/glory-1466357583.mp4" type="video/webm">
     </video>
 
 		<form action="/" method="POST">
@@ -170,16 +170,7 @@
         type: 'post',
         dataType: 'text',
         success: function (data) {
-          // TODO: Actually get the file name.
-          var fileName = data.fileName;
-          console.log(fileName);
-          console.log('We finished this');
-
-          $('#selector_widget').hide();
-          $('#clip-choices').hide();
-
-          $("$stitch_video > source").attr("src", fileName);
-          $('#stitch_video').show();
+	  window.location.href = "/output/" + data;
         },
         data: JSON.stringify(stitch_data),
         contentType: "application/json; charset=utf-8"
