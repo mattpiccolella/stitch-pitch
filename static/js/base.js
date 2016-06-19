@@ -14,8 +14,4 @@ $(document).ready(function () {
     },  
     minLength: 1
   });
-
-  $('.clip').click(function(event) {
-    console.log(event.target.id);
-  });
 });

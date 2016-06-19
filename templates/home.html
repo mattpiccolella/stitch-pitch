@@ -30,16 +30,24 @@
 
     		<div id="clip-choices">
     			<div class="large-3 columns">
-    				<div id="clip-choice-1" class="clip">  </div>
+    				<div id="clip-1" class="clip">
+              <p id="clip-choice-1" class='clip-text'></p>
+            </div>
     			</div>
       			<div class="large-3 columns">
-      				<div id="clip-choice-2" class="clip">  </div>
+      				<div id="clip-2" class="clip">  
+                <p id="clip-choice-2" class='clip-text'></p>
+              </div>
       			</div>
     			<div class="large-3 columns">
-      				<div id="clip-choice-3" class="clip">  </div>
+      				<div id="clip-3" class="clip">
+                <p id="clip-choice-3" class='clip-text'></p>
+              </div>
       			</div>
       			<div class="large-3 columns">
-      				<div id="clip-choice-4" class="clip">  </div>
+      				<div id="clip-4" class="clip">
+                <p id="clip-choice-4" class='clip-text'></p>
+              </div>
       			</div>			
     		</div>
       {% endif %}
@@ -51,6 +59,9 @@
     var lyrics = "{{ lyrics }}".split(' ');
     var currentStart = 0;
     var NUM_WORDS = 6;
+    var videosSelected = [];
+    var currentVideos = [];
+    var hasLoadedVideos = false;
 
     // TODO: Handle the edge cases for videos.
 
@@ -68,15 +79,70 @@
       $('#lyrics_text').html(getFormattedLyrics());
     }
 
+    function loadVideosAndSet() {
+      hasLoadedVideos = false;
+      // TODO: Make this real with AJAX.
+      currentVideos = [
+        {"word" : "Hey", "file_name" : "filename-1.mp4", "duration" : 1.5},
+        {"word" : "Hey", "file_name" : "filename-2.mp4", "duration" : 1.5},
+        {"word" : "Hey", "file_name" : "filename-3.mp4", "duration" : 1.5},
+        {"word" : "Hey", "file_name" : "filename-4.mp4", "duration" : 1.5}
+      ]
+
+      for (var i = 0; i < currentVideos.length; i++) {
+        var lyric = currentVideos[i];
+        var selector = '#clip-choice-' + (i+1);
+        $(selector).text(lyric.word);
+      }
+
+      hasLoadedVideos = true;
+    }
+
     var currentLyrics = getCurrentLyrics();
     setFormattedLyrics();
+    loadVideosAndSet();
+
+    function logSelectedLyric(id) {
+      var index = -1;
+      switch(id) {
+        case 'clip-1':
+          index = 0;
+          break;
+        case 'clip-2':
+          index = 1;
+          break;
+        case 'clip-3':
+          index = 2;
+          break;
+        case 'clip-4':
+          index = 3;
+          break;
+        default:
+          console.log('Something went wrong');
+          return false;
+      }
+
+      if (index < currentVideos.length) {
+        videosSelected.push(currentVideos[index]);
+        return true;
+      } else {
+        console.log('We do not have a video for you');
+        return false;
+      }
+    }
 
     $('.clip').click(function(event) {
-      currentStart++;
-      if (currentStart % NUM_WORDS == 0) {
-        currentLyrics = getCurrentLyrics();
+      if (hasLoadedVideos) {
+        var validLyric = logSelectedLyric(event.target.id);
+        if (validLyric) {
+          currentStart++;
+          if (currentStart % NUM_WORDS == 0) {
+            currentLyrics = getCurrentLyrics();
+          }
+          setFormattedLyrics();
+          console.log(videosSelected);
+        }
       }
-      setFormattedLyrics();
     });
 
   </script>
