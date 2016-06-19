@@ -8,7 +8,7 @@
     		</div>
 		</div>
 
-		<form action="/search" method="POST">
+		<form action="/" method="POST">
         	<div class="small-10 columns">
         	    <input type="text" placeholder="Search for a song" id="user_search" name="user_search" required/>
         	</div>
@@ -17,25 +17,31 @@
         	</div>
     	</form>
 
-		<div class="columns">
-			<div id="lyrics"></div>
-		</div>
+    {% if should_show_results %}
+  		<div class="columns">
+        <h2>{{ song_name }} by {{ artist_name }}</h2>
+  			<div id="lyrics">
+          <p>{{ lyrics }}</p>
+        </div>
+  		</div>
 
-		<div id="clip-choices">
-			<div class="large-3 columns">
-				<div id="clip-choice-1" class="clip">  </div>
-			</div>
+  		<div id="clip-choices">
   			<div class="large-3 columns">
-  				<div id="clip-choice-2" class="clip">  </div>
+  				<div id="clip-choice-1" class="clip">  </div>
   			</div>
-			<div class="large-3 columns">
-  				<div id="clip-choice-3" class="clip">  </div>
-  			</div>
+    			<div class="large-3 columns">
+    				<div id="clip-choice-2" class="clip">  </div>
+    			</div>
   			<div class="large-3 columns">
-  				<div id="clip-choice-4" class="clip">  </div>
-  			</div>			
-		</div>
+    				<div id="clip-choice-3" class="clip">  </div>
+    			</div>
+    			<div class="large-3 columns">
+    				<div id="clip-choice-4" class="clip">  </div>
+    			</div>			
+  		</div>
+    {% endif %}
 
 	</div>
 </div>
+<script src="{{ url_for('static', filename='js/base.js') }}"></script>
 {% endblock %}

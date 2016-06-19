@@ -1,11 +1,23 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 from config import config
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/auto_search', methods=['GET'])
+def auto_search():
+  search = request.args.get('term')
+  RESULTS = ['ABC', 'DEF', 'GHI']
+  return jsonify(list = RESULTS)
+
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('app.html')
+  should_show_results = (request.method == 'POST')
+  # TODO: Make these real.
+  song_name = 'Hey Jude'
+  artist_name = 'The Beatles'
+  lyrics = "Hey Jude, don't make it bad, take a sad song, and make it better"
+  return render_template('home.html', should_show_results = should_show_results,
+    song_name = song_name, artist_name = artist_name, lyrics = lyrics)
 
 if __name__ == '__main__':
     app.run()
