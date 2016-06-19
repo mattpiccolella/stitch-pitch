@@ -1,9 +1,40 @@
-from flask import Flask, render_template, request, jsonify
-from config import config
+from __future__ import division
+
+import os
 import time
+
+from flask import Flask, render_template, request, jsonify, send_file
+from moviepy.editor import VideoFileClip, concatenate_videoclips
+
+from config import config
 from model.models import Song
 
+
 app = Flask(__name__)
+
+# FILLER_VIDEO = meditor.VideoFileClip("filler.mp4", audio=False)
+
+def make_video(clips, song):
+    prev_finish = 0
+    for clip, lyric in zip(clips, song.lyrics):
+        if prev_finish < lyric.start_time:  # GAP
+            length = lyric.start_time - prev_finish
+            yield FILLER_VIDEO.subclip(0, length) \
+                              .set_start(prev_finish)
+        else:
+            yield clip.speedx(final_duration=lyric.duration)
+        prev_finish = lyric.start_time + lyric.duration
+
+@app.route('/play', methods=["POST"])
+def play():
+    clips = [meditor.VideoFileClip(clip) for clip in request.json["clips"]]
+    song = Song.object(song_name=request.json["song"])
+
+    video = concatenate_videoclips(list(make_video(clips, song)))
+
+    fname = "output-{0}.webm".format(int(time.time()))
+    video.write_videofile(fname)
+    send_file(fname, mimetype="video/webm")
 
 @app.route('/auto_search', methods=['GET'])
 def auto_search():
@@ -32,7 +63,7 @@ def home():
 
 @app.route("/record")
 def record():
-    return render_template("record.html")
+    return render_template("record.html", word="hello")
 
 @app.route("/upload", methods=["POST"])
 def upload():
