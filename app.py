@@ -76,7 +76,6 @@ def random_word():
   global i
   i = i + 1
   with open('files/eye_tiger.txt') as song_words:
-    import pdb; pdb.set_trace()
     words = [line.rstrip('\n') for line in song_words]
     word = words[i]
     return word
@@ -96,9 +95,8 @@ def upload():
     fname = "uploads/{0}-{1}.webm".format(word, curr)
     request.files["video"].save(fname)
 
-
     mp4_fname = "uploads/{0}-{1}.mp4".format(word, curr)
-    subprocess.check_call(["ffmpeg", "-i", fname, "-sameq", mp4_fname])
+    subprocess.check_call(["ffmpeg", "-i", fname, "-qscale", "0", mp4_fname])
     video_clip = VideoClip(author=name, word=word, file_name=mp4_fname)
     video_clip.save()
 
