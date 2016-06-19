@@ -154,7 +154,7 @@ $(document).ready(function(){
 
     request.onreadystatechange = function () {
       if (request.readyState == 4 && request.status == 200) {
-        // TODO: 
+        alert("UPLOADED!");
       }
     };
 

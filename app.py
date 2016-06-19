@@ -30,9 +30,9 @@ def home():
         song_name = song_name, artist_name = artist_name, lyrics = lyrics)
   return render_template('home.html', should_show_results = should_show_results)
 
-@app.route("/test.html")
-def test():
-    return render_template("test.html")
+@app.route("/record")
+def record():
+    return render_template("record.html")
 
 @app.route("/upload", methods=["POST"])
 def upload():

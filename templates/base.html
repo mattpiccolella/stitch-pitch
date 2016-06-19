@@ -1,90 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}{% endblock %}</title>
+    <script src="https://cdn.WebRTC-Experiment.com/RecordRTC.js"></script>
 
-  <script src="https://cdn.WebRTC-Experiment.com/RecordRTC.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.min.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-  <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
-  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
+    {% block scripts %} {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    {% endblock %}
 
-  <script type="text/javascript">
-
-var options = {
-   type: 'video',
-    video: {
-      width: 320,
-      height: 240
-   },
-   canvas: {
-      width: 320,
-      height: 240
-   }
-   frameInterval: 20 // minimum time between pushing frames to Whammy (in milliseconds)
-};
-var recordRTC = RecordRTC(mediaStream, options);
-recordRTC.startRecording();
-recordRTC.stopRecording(function(videoURL) {
-    video.src = videoURL;
-
-    var recordedBlob = recordRTC.getBlob();
-    recordRTC.getDataURL(function(dataURL) { });
-});
-
-recordRTC.save('File Name');
-
-  </script>
-  <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
-</head>
-<body>
-    <button onclick="record()">Record</button>
-    <button onclick="stop()">Stop</button>
-
-    <button onclick="recordVideo()">Record Video</button>
-    <button onclick="stopVideo()">Stop Video</button>
-
-    <video src="" width="500" height="500">
-      
-    </video>
-
-
-
-
-<div>
-		<div>
-			<video id="video" autoplay></video>
-			<canvas id="canvas"></canvas>
-		</div>
-		<div>
-			<img width=360 height=360 src="" id="replay-screen">
-		</div>
-	</div>
-	<div>
-		<div>
-			<a href="#" id="play" class="btn btn-primary btn-large">&#x25BA;</a>
-			<a href="#" id="stop" class="btn btn-primary btn-large">&#x2590;&#x2590;</a>
-			<a href="#" id="replay" class="btn btn-primary btn-large">Replay</a>
-			<a href="#" id="delete-replay" class="btn btn-primary btn-large">Delete Replay</a>
-		</div>
-	</div>
-
-
-
-
-  {% block body %}{% endblock %}
-  <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
-  <script>
-  	$(document).foundation();
-  </script>
-  <script src="{{ url_for('static', filename='js/base.js') }}"></script>
-</body>
+    <script>
+      $(document).foundation();
+    </script>
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+  </body>
 </html>
