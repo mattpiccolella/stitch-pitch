@@ -75,9 +75,12 @@ def home():
 i = -1
 
 def random_word():
-  with open('files/song_words.txt') as song_words:
-    words = [line.rstrip('\n').split()[1] for line in song_words]
-    word = words[random.randint(0,len(words)-1)]
+  global i
+  i = i + 1
+  with open('files/eye_tiger.txt') as song_words:
+    import pdb; pdb.set_trace()
+    words = [line.rstrip('\n') for line in song_words]
+    word = words[i]
     return word
 
 @app.route("/record")
