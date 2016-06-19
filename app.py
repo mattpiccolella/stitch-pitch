@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from config import config
 import time
-from model.models import Song
+from model.models import Song, VideoClip
 
 app = Flask(__name__)
 
@@ -32,14 +32,26 @@ def home():
 
 @app.route("/record")
 def record():
-    return render_template("record.html")
+    with open('files/song_words.txt') as song_words:
+      words = [line.rstrip('\n').split()[1] for line in song_words]
+      words_string = ' '.join(words)
+      return render_template("record.html", words = words_string)
 
 @app.route("/upload", methods=["POST"])
 def upload():
-	currTime = time.time()
+    #import pdb; pdb.set_trace()
+    currTime = time.time()
 
-	request.files["video"].save("uploads/video-"+str(currTime)+".webm")
-	return "SUCCESS"
+    name = request.form["author_name"]
+    word = request.form["word"]
+    file_extension = str(word) + "-" + str(currTime) + ".webm"
+    file_name = "uploads/" + file_extension
+    request.files["video"].save(file_name)
+    
+    video_clip = VideoClip(author = name, word = word, file_name = file_extension)
+    video_clip.save()
+
+    return "SUCCESS"
 
 if __name__ == '__main__':
     app.run()

@@ -14,5 +14,4 @@ class Song(Document):
 class VideoClip(Document):
   word = StringField(required=True)
   file_name = StringField(required=True)
-  duration = FloatField(required=True)
   author = StringField(required=True)
