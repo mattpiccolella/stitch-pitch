@@ -11,7 +11,12 @@ ARTIST_NAME =  {
     'Blackbird' : 'The Beatles',
     'Eye of the Tiger' : 'Survivor',
     'New York, New York' : 'Frank Sinatra',
-    'Wonderful World' : 'Louis Armstrong'
+    'Wonderful World' : 'Louis Armstrong',
+    'Help' : 'The Beatles',
+    'Hey Jude' : 'The Beatles',
+    'Mrs Robinson' : 'Simon and Garfunkel',
+    'Take Me Out to the Ballgame' : 'Anonymous',
+    'Imagine' : 'John Lennon'
 }
 
 def parse(fin):
