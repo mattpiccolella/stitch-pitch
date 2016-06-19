@@ -47,6 +47,24 @@ def load_lyrics():
         song.save()
 
 @cli.command()
+def create_lyrics():
+    for fname in os.listdir("files/kar/"):
+        song_name, __ = os.path.splitext(fname)
+        fname = os.path.join("files/kar/", fname)
+        try:
+            k = Kar(fname)
+            print(song_name)
+            with open("files/lyrics/" + song_name, "w") as fout:
+                msg = "\n".join("{0} {1} {2}".format(text, start, duration)
+                                for text, start, duration in k.lyrics)
+                fout.write(msg)
+        except Exception as e:
+            print()
+            print(song_name, "failed")
+            print(e)
+            print()
+
+@cli.command()
 def display():
     print("\n".join(song.title for song in Song.objects))
 
