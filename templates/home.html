@@ -8,6 +8,10 @@
     		</div>
 		</div>
 
+    <video id="stitch_video" width="320" height="240" controls hidden>
+      <source src="/uploads/glory-1466357583.mp4" type="video/mp4">
+    </video>
+
 		<form action="/" method="POST">
         	<div class="small-8 columns">
         	    <input type="text" placeholder="Search for a song" id="user_search" name="user_search"/>
@@ -20,7 +24,7 @@
           </div>
     </form>
 
-    <div class="columns">
+    <div class="columns" id="selector_widget">
       {{ no_results_text}}
       {% if should_show_results %}
           <h2>{{ song_name }} by {{ artist_name }}</h2>
@@ -54,7 +58,7 @@
       			</div>			
     		</div>
       </div>
-      <div class="columns">
+      <div class="columns" id="stitch_button">
           <button id="stitch" class="success stitch-btn">Stitch!</button>
       </div>
       {% endif %}
@@ -166,7 +170,16 @@
         type: 'post',
         dataType: 'json',
         success: function (data) {
-          console.log('We somehow finished this request.');
+          // TODO: Actually get the file name.
+          var fileName = data.fileName;
+          console.log(fileName);
+          console.log('We finished this');
+
+          $('#selector_widget').hide();
+          $('#clip-choices').hide();
+
+          $("$stitch_video > source").attr("src", fileName);
+          $('#stitch_video').show();
         },
         data: JSON.stringify(stitch_data),
         contentType: "application/json; charset=utf-8"

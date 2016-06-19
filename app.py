@@ -6,7 +6,7 @@ import gc
 import time
 from model.models import Song, VideoClip
 
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, send_file, send_from_directory
 from moviepy.editor import (VideoFileClip, concatenate_videoclips, AudioFileClip,
                             CompositeAudioClip)
 
@@ -113,6 +113,13 @@ def detect_silence(sound, threshold=-40, chunk=5):
     while sound[trim: trim + chunk].dBFS < threshold:
         trim += chunk
     return trim / 1000.0    # ms to s
+
+@app.route("/uploads/<path>")
+def uploads(path):
+    #root_dir = os.path.dirname(os.getcwd())
+    #full_path = os.path.join(root_dir, ',uploads')
+    #print(full_path)
+    return send_from_directory("uploads/", path)
 
 
 @app.route("/upload", methods=["POST"])
