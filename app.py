@@ -71,7 +71,7 @@ def play():
 
     fname = "output/output-{0}.webm".format(int(time.time()))
     video.set_audio(audio).write_videofile(fname, fps=24)
-    return send_file(fname, mimetype="video/webm")
+    return fname.split("/")[1]
 
 @app.route('/auto_search', methods=['GET'])
 def auto_search():
