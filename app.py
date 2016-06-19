@@ -15,15 +15,13 @@ app = Flask(__name__)
 # FILLER_VIDEO = meditor.VideoFileClip("filler.mp4", audio=False)
 
 def make_video(clips, song):
-    prev_finish = 0
+    end = 0
     for clip, lyric in zip(clips, song.lyrics):
-        if prev_finish < lyric.start_time:  # GAP
-            length = lyric.start_time - prev_finish
-            yield FILLER_VIDEO.subclip(0, length) \
-                              .set_start(prev_finish)
+        if end < lyric.start_time:  # GAP
+            yield FILLER_VIDEO.speedx(final_duration=lyric.start_time - end)
         else:
             yield clip.speedx(final_duration=lyric.duration)
-        prev_finish = lyric.start_time + lyric.duration
+        end = lyric.start_time + lyric.duration
 
 @app.route('/play', methods=["POST"])
 def play():
