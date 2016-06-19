@@ -53,6 +53,8 @@
               </div>
       			</div>			
     		</div>
+
+        <button id='stitch'>Stitch</button>
       {% endif %}
     </div>
 
@@ -65,6 +67,7 @@
     var videosSelected = [];
     var currentVideos = [];
     var hasLoadedVideos = false;
+    var songName = "{{ song_name }}";
 
     // TODO: Handle the edge cases for videos.
 
@@ -85,20 +88,19 @@
     function loadVideosAndSet() {
       hasLoadedVideos = false;
       // TODO: Make this real with AJAX.
-      currentVideos = [
-        {"word" : "Hey", "file_name" : "filename-1.mp4", "duration" : 1.5},
-        {"word" : "Hey", "file_name" : "filename-2.mp4", "duration" : 1.5},
-        {"word" : "Hey", "file_name" : "filename-3.mp4", "duration" : 1.5},
-        {"word" : "Hey", "file_name" : "filename-4.mp4", "duration" : 1.5}
-      ]
 
-      for (var i = 0; i < currentVideos.length; i++) {
-        var lyric = currentVideos[i];
-        var selector = '#clip-choice-' + (i+1);
-        $(selector).text(lyric.word);
-      }
-
-      hasLoadedVideos = true;
+      $.getJSON("/available_clips",{
+        word: currentLyrics[currentStart % NUM_WORDS],
+        }, function(data) {
+          currentVideos = JSON.parse(data.clips);
+          console.log(currentVideos);
+          for (var i = 0; i < currentVideos.length; i++) {
+            var lyric = currentVideos[i];
+            var selector = '#clip-choice-' + (i+1);
+            $(selector).text(lyric.word + ' ' + lyric.author);
+          }
+          hasLoadedVideos = true;
+      });
     }
 
     var currentLyrics = getCurrentLyrics();
@@ -126,7 +128,7 @@
       }
 
       if (index < currentVideos.length) {
-        videosSelected.push(currentVideos[index]);
+        videosSelected.push(currentVideos[index].file_name);
         return true;
       } else {
         console.log('We do not have a video for you');
@@ -143,11 +145,17 @@
             currentLyrics = getCurrentLyrics();
           }
           setFormattedLyrics();
-          console.log(videosSelected);
+          loadVideosAndSet();
         }
       }
     });
 
+    $('#stitch').click(function(event) {
+      stitch_data = {}
+      stitch_data.songName = songName;
+      stitch_data.videoFiles = videosSelected;
+      // TODO: Make this request with AJAX.
+    });
   </script>
 </div>
 <script src="{{ url_for('static', filename='js/base.js') }}"></script>

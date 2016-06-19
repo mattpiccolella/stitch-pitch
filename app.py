@@ -9,6 +9,7 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 
 from config import config
 
+from bson import json_util
 
 app = Flask(__name__)
 
@@ -40,6 +41,12 @@ def auto_search():
   results = Song.objects(title__icontains=search_term).distinct('title')
   return jsonify(list = results)
 
+@app.route('/available_clips', methods=['GET'])
+def available_clips():
+  word = request.args.get('word')
+  query = VideoClip.objects(word = word)
+  return jsonify(clips = query.to_json())
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
   should_show_results = (request.method == 'POST')
@@ -59,11 +66,17 @@ def home():
         song_name = song_name, artist_name = artist_name, lyrics = lyrics)
   return render_template('home.html', should_show_results = should_show_results)
 
+i = -1
+
 def random_word():
-  with open('files/song_words.txt') as song_words:
-    words = [line.rstrip('\n').split()[1] for line in song_words]
-    word = words[random.randint(0,len(words)-1)]
-    return word
+  global i
+  i = i + 1
+  WORDS = ['rising', 'up', 'back', 'on', 'the', 'streets']
+  return WORDS[i]
+  #with open('files/song_words.txt') as song_words:
+    #words = [line.rstrip('\n').split()[1] for line in song_words]
+    #word = words[random.randint(0,len(words)-1)]
+    #return word
 
 @app.route("/record")
 def record():
