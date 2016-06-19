@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 from config import config
+from model.models import Song
 
 app = Flask(__name__)
 
 @app.route('/auto_search', methods=['GET'])
 def auto_search():
   search = request.args.get('term')
-  RESULTS = ['ABC', 'DEF', 'GHI']
+  results 
   return jsonify(list = RESULTS)
 
 @app.route('/', methods=['GET', 'POST'])
