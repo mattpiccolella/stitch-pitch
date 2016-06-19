@@ -31,8 +31,15 @@
 	color: #FFFFFF;
 }
 
+#clip-choices {
+  height: 20rem;
+  text-align: center;
+}
+
 .clip-text {
   text-align: center;
+  font-size: 1.4rem;
+  line-height: 10rem;
 }
 
 #players {
