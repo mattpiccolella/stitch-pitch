@@ -152,9 +152,18 @@
 
     $('#stitch').click(function(event) {
       stitch_data = {}
-      stitch_data.songName = songName;
-      stitch_data.videoFiles = videosSelected;
-      // TODO: Make this request with AJAX.
+      stitch_data.clips = videosSelected;
+      stitch_data.song = songName;
+      $.ajax({
+        url: '/play',
+        type: 'post',
+        dataType: 'json',
+        success: function (data) {
+          console.log('We somehow finished this request.');
+        },
+        data: JSON.stringify(stitch_data),
+        contentType: "application/json; charset=utf-8"
+      });
     });
   </script>
 </div>

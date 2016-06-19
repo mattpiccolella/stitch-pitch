@@ -29,8 +29,9 @@ def make_video(clips, song):
 
 @app.route('/play', methods=["POST"])
 def play():
-    clips = [VideoFileClip(clip) for clip in request.json["clips"]]
-    song = Song.objects(title=request.json["song"]).get()
+    #import pdb; pdb.set_trace()
+    clips = [VideoFileClip(str(clip)) for clip in request.json["clips"]]
+    song = Song.objects(title=str(request.json["song"])).get()
 
     video = concatenate_videoclips(list(make_video(clips, song)))
     instrumental = AudioFileClip("files/instrumental/{0}.wav".format(request.json["song"]))
@@ -74,24 +75,16 @@ def home():
 i = -1
 
 def random_word():
-  global i
-  i = i + 1
-  WORDS = ['rising', 'up', 'back', 'on', 'the', 'streets']
-  return WORDS[i]
-  #with open('files/song_words.txt') as song_words:
-    #words = [line.rstrip('\n').split()[1] for line in song_words]
-    #word = words[random.randint(0,len(words)-1)]
-    #return word
-
-
-words = ["imagine", "there's", "no", "heaven", "it's", "easy"]
-i = -1
+  with open('files/song_words.txt') as song_words:
+    words = [line.rstrip('\n').split()[1] for line in song_words]
+    word = words[random.randint(0,len(words)-1)]
+    return word
 
 @app.route("/record")
 def record():
     global i
     i += 1
-    return render_template("record.html", word=words[i])
+    return render_template("record.html", word=random_word())
 
 @app.route("/upload", methods=["POST"])
 def upload():
@@ -104,7 +97,7 @@ def upload():
     file_name = "uploads/" + file_extension
     request.files["video"].save(file_name)
     
-    video_clip = VideoClip(author = name, word = word, file_name = file_extension)
+    video_clip = VideoClip(author = name, word = word, file_name = file_name)
     video_clip.save()
 
     return "SUCCESS"
