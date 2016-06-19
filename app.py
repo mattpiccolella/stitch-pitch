@@ -23,7 +23,7 @@ def get_fillers(song):
     for gif in giphy.search(song):
         timestamp = int(time.time())
         subprocess.check_call(["wget", "--no-clobber", gif.media_url,
-                               "output/{0}.gif".format(timestamp)])
+                               "-o", "output/{0}.gif".format(timestamp)])
         yield VideoFileClip("output/{0}.gif".format(timestamp), audio=False)
 
 def make_video(clips, song):
