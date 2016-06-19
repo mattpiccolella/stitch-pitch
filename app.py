@@ -43,7 +43,7 @@ def batch_concatenate(songs, batch_size=30):
         try:
             if len(batch) > batch_size:
                 video = concatenate_videoclips(batch)
-                video.write_videofile("/tmp/video-{0}.mp4".format(timestamp))
+                video.write_videofile("/tmp/video-{0}.mp4".format(timestamp), fps=24)
                 del video    # garbage collect the file descriptors!
                 batch = [VideoFileClip("/tmp/video-{0}.mp4".format(timestamp))]
             batch.append(next(songs))
@@ -59,7 +59,7 @@ def play():
     audio = CompositeAudioClip([video.audio, instrumental.subclip(0, video.duration)])
 
     fname = "output/output-{0}.webm".format(int(time.time()))
-    video.set_audio(audio).write_videofile(fname)
+    video.set_audio(audio).write_videofile(fname, fps=24)
     return send_file(fname, mimetype="video/webm")
 
 @app.route('/auto_search', methods=['GET'])
