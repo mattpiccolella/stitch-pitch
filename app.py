@@ -1,6 +1,6 @@
 from __future__ import division
 
-import os
+import os, random
 import time
 from model.models import Song, VideoClip
 
@@ -59,12 +59,16 @@ def home():
         song_name = song_name, artist_name = artist_name, lyrics = lyrics)
   return render_template('home.html', should_show_results = should_show_results)
 
+def random_word():
+  with open('files/song_words.txt') as song_words:
+    words = [line.rstrip('\n').split()[1] for line in song_words]
+    word = words[random.randint(0,len(words)-1)]
+    return word
+
 @app.route("/record")
 def record():
     with open('files/song_words.txt') as song_words:
-      words = [line.rstrip('\n').split()[1] for line in song_words]
-      words_string = ' '.join(words)
-      return render_template("record.html", words = words_string)
+      return render_template("record.html", word = random_word())
 
 @app.route("/upload", methods=["POST"])
 def upload():

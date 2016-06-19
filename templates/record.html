@@ -9,7 +9,7 @@
 {% block body %}
 <div class="row">
   <div class="container">
-    <h1 id="current_word">Word</h1>
+    <h1 id="current_word">{{ word }}</h1>
     <div id="players">
       <video class="recorder" autoplay loop muted> </video>
       <audio class="recorder" autoplay loop muted></audio>
@@ -39,13 +39,8 @@
   var formData = null;
 
   // Handle the words we're needing.
-  var words = "{{ words }}".split(' ');
-  var currentWord = 0;
+  var word = "{{ word }}";
   var author_name = "";
-
-  function setWord() {
-    $('#current_word').text(words[currentWord % words.length]);
-  }
 
   // set the video options
   var videoOptions = {
@@ -199,9 +194,7 @@
 
     request.onreadystatechange = function () {
       if (request.readyState == 4 && request.status == 200) {
-        currentWord++;
-        setWord();
-        instantiateVideoRecorder();
+        location.reload();
       } else {
         console.log('Something went wrong.');
       }
@@ -214,11 +207,9 @@
     console.log($('#author_name').val());
     console.log(author_name);
     formData.append('author_name', author_name);
-    formData.append('word', words[currentWord]);
+    formData.append('word', word);
     request.open('POST', "/upload");
     request.send(formData);
   });
-
-  setWord();
 </script>
 {% endblock %}
