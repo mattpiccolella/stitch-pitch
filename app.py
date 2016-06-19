@@ -1,6 +1,7 @@
 from __future__ import division, print_function
 
 import os, random
+import subprocess
 import time
 from model.models import Song, VideoClip
 
@@ -19,11 +20,8 @@ FILLER_VIDEO = VideoFileClip("filler.mp4", audio=False)
 def make_video(clips, song):
     end = 0
     for clip, lyric in zip(clips, song.lyrics):
-        print("ZZZ", end, lyric.start_time)
         if end < lyric.start_time:  # GAP
-            print("QQQ", "GAP", lyric.start_time - end)
             yield FILLER_VIDEO.speedx(final_duration=lyric.start_time - end)
-        print("QQQ", "NOP", lyric.duration)
     	yield clip.speedx(final_duration=lyric.duration)
         end = lyric.start_time + lyric.duration
 
@@ -88,16 +86,17 @@ def record():
 
 @app.route("/upload", methods=["POST"])
 def upload():
-    #import pdb; pdb.set_trace()
-    currTime = time.time()
+    curr = int(time.time())
 
     name = request.form["author_name"]
     word = request.form["word"]
-    file_extension = str(word) + "-" + str(currTime) + ".webm"
-    file_name = "uploads/" + file_extension
-    request.files["video"].save(file_name)
-    
-    video_clip = VideoClip(author = name, word = word, file_name = file_name)
+    fname = "uploads/{0}-{1}.webm".format(word, curr)
+    request.files["video"].save(fname)
+
+
+    mp4_fname = "uploads/{0}-{1}.mp4".format(word, curr)
+    subprocess.check_call(["ffmpeg", "-i", fname, "-sameq", mp4_fname])
+    video_clip = VideoClip(author=name, word=word, file_name=mp4_fname)
     video_clip.save()
 
     return "SUCCESS"
