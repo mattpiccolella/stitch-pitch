@@ -9,6 +9,7 @@ from model.models import Song, VideoClip
 from flask import Flask, render_template, request, jsonify, send_file
 from moviepy.editor import (VideoFileClip, concatenate_videoclips, AudioFileClip,
                             CompositeAudioClip)
+import giphypop
 
 from config import config
 
@@ -16,22 +17,30 @@ from bson import json_util
 
 app = Flask(__name__)
 
-FILLER_VIDEO = VideoFileClip("filler.mp4", audio=False)
+giphy = giphypop.Giphy()
+
+def get_fillers(song):
+    for gif in giphy.search(song):
+        timestamp = int(time.time())
+        subprocess.check_call(["wget", "--no-clobber", gif.media_url,
+                               "output/{0}.gif".format(timestamp)])
+        yield VideoFileClip("output/{0}.gif".format(timestamp), audio=False)
 
 def make_video(clips, song):
     end = 0
 
+    fillers = get_fillers(song)
     for clip, lyric in zip(clips, song.lyrics):
         clip = VideoFileClip(clip)
         #if song == "Eye of the Tiger":
         #    lyric.start_time -= 2
         if end < lyric.start_time:  # GAP
-            yield FILLER_VIDEO.speedx(final_duration=lyric.start_time - end)
+            yield next(fillers).speedx(0, lyric.start_time - end)
         if clip.duration < lyric.duration:
             yield clip
-            yield FILLER_VIDEO.speedx(final_duration=lyric.duration - clip.duration)
+            yield next(fillers).speedx(final_duration=lyric.duration - clip.duration)
         else:
-    	      yield clip.speedx(final_duration=lyric.duration)
+            yield clip.speedx(final_duration=lyric.duration)
         end = lyric.start_time + lyric.duration
 
 def batch_concatenate(songs, batch_size=30):
@@ -43,7 +52,8 @@ def batch_concatenate(songs, batch_size=30):
         try:
             if len(batch) > batch_size:
                 video = concatenate_videoclips(batch)
-                video.write_videofile("/tmp/video-{0}.mp4".format(timestamp), fps=24)
+                video.write_videofile("/tmp/video-{0}.mp4".format(timestamp),
+                                      fps=24)
                 del video    # garbage collect the file descriptors!
                 batch = [VideoFileClip("/tmp/video-{0}.mp4".format(timestamp))]
             batch.append(next(songs))
