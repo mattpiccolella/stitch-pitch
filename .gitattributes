@@ -1,0 +1,4 @@
+*.wav filter=lfs diff=lfs merge=lfs -text
+filler.mp4 filter=lfs diff=lfs merge=lfs -text
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+files/instrumental filter=lfs diff=lfs merge=lfs -text
