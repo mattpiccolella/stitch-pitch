@@ -5,6 +5,7 @@
 #lyrics_box {
 	border: 1px solid;
 	height: 20rem;
+	background-color: #8095FF;
 }
 
 .clip {
@@ -18,17 +19,29 @@
 	margin-bottom: 2rem;
 }
 
-.lyrics_box {
-  position: relative;
-}
-
 .lyrics_inner {
   position: absolute;
-  top: 50%;
+  top: 59%;
   left: 50%;
   transform: translate(-50%, -50%);
+  background-color: #8095FF;
+}
+
+#lyrics_text {
+	color: #FFFFFF;
 }
 
 .clip-text {
   text-align: center;
 }
+
+#players {
+  text-align: center;
+}
+
+.stitch-btn {
+	font-size: 2rem;
+	padding: .6rem 1rem;
+	width: 100%;
+}
+

@@ -9,17 +9,17 @@
 {% block body %}
 <div class="row">
   <div class="container">
-    <h1 id="current_word">{{ word }}</h1>
+    <center><h1 id="current_word">{{ word }}</h1></center>
     <div id="players">
       <video class="recorder" autoplay loop muted> </video>
       <audio class="recorder" autoplay loop muted></audio>
     </div>
 
     <div class="columns">
-      <input class="columns-3 large" id="author_name" type="text">
+      <input class="columns-3 large" id="author_name" placeholder="Enter your name" type="text">
       <button class="columns-3 large" id="record_button">Start Recording</button>
       <button class="columns-3 large" id="play_button">Play</button>
-      <button class="columns-3 large" id="upload_button">Upload</button>
+      <button class="columns-3 large success" id="upload_button">Upload</button>
     </div>
   </div>
 </div>
