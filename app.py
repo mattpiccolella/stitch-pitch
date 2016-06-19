@@ -27,9 +27,8 @@ def make_video(clips, song):
 
 @app.route('/play', methods=["POST"])
 def play():
-    #import pdb; pdb.set_trace()
-    clips = [VideoFileClip(str(clip)) for clip in request.json["clips"]]
-    song = Song.objects(title=str(request.json["song"])).get()
+    clips = [VideoFileClip(clip) for clip in request.json["clips"]]
+    song = Song.objects(title=request.json["song"]).get()
 
     video = concatenate_videoclips(list(make_video(clips, song)))
     instrumental = AudioFileClip("files/instrumental/{0}.wav".format(request.json["song"]))
@@ -85,6 +84,14 @@ def record():
     global i
     i += 1
     return render_template("record.html", word=random_word())
+
+
+def detect_silence(sound, threshold=-40, chunk=5)
+    trim = 0
+    while sound[trim: trim + chunk].dBFS < threshold:
+        trim += chunk
+    return trim / 1000.0    # ms to s
+
 
 @app.route("/upload", methods=["POST"])
 def upload():
