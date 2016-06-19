@@ -64,6 +64,7 @@
     var lyrics = "{{ lyrics }}".split(' ');
     var currentStart = 0;
     var NUM_WORDS = 6;
+    var NUM_CLIPS = 4;
     var videosSelected = [];
     var currentVideos = [];
     var hasLoadedVideos = false;
@@ -98,6 +99,10 @@
             var lyric = currentVideos[i];
             var selector = '#clip-choice-' + (i+1);
             $(selector).text(lyric.word + ' ' + lyric.author);
+          }
+          for (var j = i; j < NUM_CLIPS; j++) {
+            var selector = '#clip-choice-' + (j+1);
+            $(selector).text('');
           }
           hasLoadedVideos = true;
       });
